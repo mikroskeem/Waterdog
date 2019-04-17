@@ -1,4 +1,4 @@
-From 4d61f6383aa563b00a531053c7560b7aac21e508 Mon Sep 17 00:00:00 2001
+From 0c7c5d4f0437554c8dcc4ded39f25757782d3a1c Mon Sep 17 00:00:00 2001
 From: Colin Godsey <crgodsey@gmail.com>
 Date: Tue, 16 Apr 2019 07:50:25 -0600
 Subject: [PATCH] Waterdog PE (modifications)
@@ -126,7 +126,7 @@ index 7b0ecb09..1e82b290 100644
  
          this.ctx = nativeCipher.init( forEncryption, key.getEncoded() );
 diff --git a/protocol/pom.xml b/protocol/pom.xml
-index ee513895..335c1502 100644
+index 336415d0..e6818043 100644
 --- a/protocol/pom.xml
 +++ b/protocol/pom.xml
 @@ -34,6 +34,18 @@
@@ -803,7 +803,7 @@ index d0a7529e..032391fa 100644
          buf.writeByte( difficulty );
          buf.writeByte( gameMode );
 diff --git a/proxy/pom.xml b/proxy/pom.xml
-index f0497f59..2947afca 100644
+index ed595f32..77ca8a20 100644
 --- a/proxy/pom.xml
 +++ b/proxy/pom.xml
 @@ -22,6 +22,15 @@
@@ -1016,9 +1016,18 @@ index 110ac496..ce6e29b3 100644
  
              ByteBuf brand = ByteBufAllocator.DEFAULT.heapBuffer();
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index ade817e9..126657a3 100644
+index ade817e9..0467042b 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
+@@ -65,7 +65,7 @@ import net.md_5.bungee.util.CaseInsensitiveSet;
+ import net.md_5.bungee.util.ChatComponentTransformer;
+ 
+ @RequiredArgsConstructor
+-public final class UserConnection implements ProxiedPlayer
++public class UserConnection implements ProxiedPlayer // Waterdog - make non-final for PEUserConnection class
+ {
+ 
+     /*========================================================================*/
 @@ -335,6 +335,16 @@ public final class UserConnection implements ProxiedPlayer
              return;
          }
@@ -1153,7 +1162,7 @@ index 44011a96..805907e4 100644
          }
  
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index 765731d8..aef1f823 100644
+index 765731d8..bd9b7d20 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 @@ -333,6 +333,20 @@ public class InitialHandler extends PacketHandler implements PendingConnection
@@ -1186,7 +1195,18 @@ index 765731d8..aef1f823 100644
                  {
                      unsafe().sendPacket( request = EncryptionUtil.encryptRequest() );
                  } else
-@@ -590,10 +604,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -517,6 +531,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+                         if ( !ch.isClosing() )
+                         {
+                             UserConnection userCon = new UserConnection( bungee, ch, getName(), InitialHandler.this );
++                            // Waterdog start - custom UserConnection for PE players
++                            if(InitialHandler.this.ch.getHandle().config() instanceof network.ycc.raknet.RakNet.Config)
++                                userCon = new network.ycc.waterdog.pe.PEUserConnection(bungee, ch, getName(), InitialHandler.this);
++                            // Waterdog end
+                             userCon.setCompressionThreshold( BungeeCord.getInstance().config.getCompressionThreshold() );
+                             userCon.init();
+ 
+@@ -590,10 +608,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          return ( name != null ) ? name : ( loginRequest == null ) ? null : loginRequest.getData();
      }
  
@@ -1292,6 +1312,29 @@ index 4882b8ed..3cf45753 100644
                  ch.writeAndFlush( ( (PacketWrapper) packet ).buf, ch.voidPromise() );
              } else
              {
+diff --git a/proxy/src/main/java/network/ycc/waterdog/pe/PEUserConnection.java b/proxy/src/main/java/network/ycc/waterdog/pe/PEUserConnection.java
+new file mode 100644
+index 00000000..eae1cafb
+--- /dev/null
++++ b/proxy/src/main/java/network/ycc/waterdog/pe/PEUserConnection.java
+@@ -0,0 +1,17 @@
++package network.ycc.waterdog.pe;
++
++import lombok.NonNull;
++import net.md_5.bungee.UserConnection;
++import net.md_5.bungee.api.ProxyServer;
++import net.md_5.bungee.connection.InitialHandler;
++import net.md_5.bungee.netty.ChannelWrapper;
++import network.ycc.waterdog.api.connection.PEProxiedPlayer;
++
++/**
++ * @author Mark Vainomaa
++ */
++public class PEUserConnection extends UserConnection implements PEProxiedPlayer {
++    public PEUserConnection(@NonNull ProxyServer bungee, @NonNull ChannelWrapper ch, @NonNull String name, InitialHandler pendingConnection) {
++        super(bungee, ch, name, pendingConnection);
++    }
++}
 -- 
-2.17.2 (Apple Git-113)
+2.21.0
 

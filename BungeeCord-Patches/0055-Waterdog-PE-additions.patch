@@ -1,9 +1,26 @@
-From 7b667a3583dbae634132ec076000317b0339d574 Mon Sep 17 00:00:00 2001
+From 56f04cc7a5e98ad18c28af132de587bade9259ae Mon Sep 17 00:00:00 2001
 From: Colin Godsey <crgodsey@gmail.com>
 Date: Tue, 16 Apr 2019 07:50:11 -0600
 Subject: [PATCH] Waterdog PE (additions)
 
 
+diff --git a/api/src/main/java/network/ycc/waterdog/api/connection/PEProxiedPlayer.java b/api/src/main/java/network/ycc/waterdog/api/connection/PEProxiedPlayer.java
+new file mode 100644
+index 00000000..2861bd6f
+--- /dev/null
++++ b/api/src/main/java/network/ycc/waterdog/api/connection/PEProxiedPlayer.java
+@@ -0,0 +1,11 @@
++package network.ycc.waterdog.api.connection;
++
++import net.md_5.bungee.api.connection.ProxiedPlayer;
++
++/**
++ * An interface representing Pocket Edition player
++ *
++ * @author Mark Vainomaa
++ */
++public interface PEProxiedPlayer extends ProxiedPlayer {
++}
 diff --git a/protocol/src/main/java/network/ycc/waterdog/pe/PEDataValues.java b/protocol/src/main/java/network/ycc/waterdog/pe/PEDataValues.java
 new file mode 100644
 index 00000000..fa848edc
@@ -1636,5 +1653,5 @@ index 00000000..331c1b29
 +    }
 +}
 -- 
-2.17.2 (Apple Git-113)
+2.21.0
 

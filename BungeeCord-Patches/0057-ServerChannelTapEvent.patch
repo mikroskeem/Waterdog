@@ -1,4 +1,4 @@
-From 7e89e2b8afecad0d8f237b9b9e44bc0c04083aaa Mon Sep 17 00:00:00 2001
+From 843dcd70b354c6b960eb6fc269124937ec7f914a Mon Sep 17 00:00:00 2001
 From: Colin Godsey <crgodsey@gmail.com>
 Date: Wed, 17 Apr 2019 06:51:16 -0600
 Subject: [PATCH] ServerChannelTapEvent
@@ -33,10 +33,10 @@ index 00000000..a1475d4a
 +    private Channel channel;
 +}
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 126657a3..0a737fdd 100644
+index 0467042b..067a005a 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-@@ -361,6 +361,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -361,6 +361,7 @@ public class UserConnection implements ProxiedPlayer // Waterdog - make non-fina
                          ch.pipeline().addLast(network.ycc.waterdog.pe.PEDecompressor.NAME, new network.ycc.waterdog.pe.PEDecompressor());
                      }
                  }
